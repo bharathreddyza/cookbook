@@ -1,9 +1,11 @@
 import React from 'react';
-import style from './recipe.module.css'
-const Recipe =({title,calories,image,ingredients})=>{
-    return(
-        <div className={style.recipe}>
-            <img className={style.image} src={image}/>
+// import style from './recipe.module.css'
+ class Recipe extends React.Component{
+     render() {
+       const  {title,calories,image,ingredients} = this.props
+         return (
+            <div  >
+            <img  src={image}/>
 
             <h1 >{title}</h1>
             <ol>
@@ -14,7 +16,10 @@ const Recipe =({title,calories,image,ingredients})=>{
             <p>{ calories}</p>
 
         </div> 
-    )
-}
+         );
+     }
+ }
+
+ 
 
 export default Recipe

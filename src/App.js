@@ -1,44 +1,57 @@
-import React,{useEffect,useState} from 'react';
+import React from 'react';
 import './App.css';
 import Recipe from './recipe'
-import style from './recipe.module.css'
-
-const App = () =>{
-
-const APP_ID = 'b81a4636'
-const APP_KEY='ae6b84fecdefdc1bc2cd563a619e55d5'
  
-const[recipes,setRecipes] = useState([]);
-const[search,setState] = useState([]);
-const [query,setQuery] = useState('chicken')
+class App extends React.Component{
 
-useEffect(()=>{
-  getRecipes();
- },[query])
+  constructor(props){
+    super(props);
 
-const getRecipes =async () =>{
-  const response = await fetch(`https://api.edamam.com/search?q=${query}&app_id=${'b81a4636'}&app_key=${'449b56cb1927316dd70bbf2487e395fa'}`)
-  const data = await response.json();
-  console.log(data.hits)
-  setRecipes(data.hits)
- 
+    this.state = {
+        data : [],
+        query:'chicken',
+     };
 }
+ 
 
-const updateSearch = e =>{
-  setState(e.target.value)
- }
 
-const getSearch = e =>{
+ 
+
+
+ updateSearch = e =>{
+   this.setState({
+   query:e.target.value
+   })
+  }
+
+ getSearch = e =>{
   e.preventDefault();
-  setQuery(search);
-  setState('');
+   
+  this.setState({
+    query:e.target.value
+  })
 }
+render(){
+
+  
+    fetch(`https://api.edamam.com/search?q=${this.state.query}&app_id=${'b81a4636'}&app_key=${'449b56cb1927316dd70bbf2487e395fa'}`)
+    .then((data)=>data.json().then(()=>{
+      this.setState({
+        data:data.hits
+      })
+    }))
+    // const data = await response.json();
+    // console.log(data.hits)
+    // setRecipes(data.hits)
+   
+  
+  
   return(
     <div className="App">
-    <h1 className={style.recipe}>cook book </h1>
+    <h1 >cook book </h1>
    
-<form onSubmit={getSearch} className="searchForm">
-  <input className="searchBar"onChange={updateSearch} value={search}/>
+<form onSubmit={this.getSearch} className="searchForm">
+  <input className="searchBar"onChange={this.updateSearch} value={this.state.query}/>
   <button
   
    className="searchButton" 
@@ -47,17 +60,20 @@ const getSearch = e =>{
    
    </button>
   </form> 
-  <div  className="recipes">
-  {recipes.map(recipe =>(
+  <div >
+  {this.state.data !== [] &&
+    this.state.data.map(recipe =>(
      <Recipe key={recipe.recipe.label}
       title={recipe.recipe.label} calories={recipe.recipe.calories} image={recipe.recipe.image}
        ingredients={recipe.recipe.ingredients}
      />
    ))}
+    
+   
    </div>
    </div>
   
-  )
+  )}
 }
 
 export default App;
